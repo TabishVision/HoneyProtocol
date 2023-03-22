@@ -113,7 +113,7 @@ pub mod pallet {
 	}
 
 	impl<T: Config> Pallet<T> {
-		fn gen_request_id() -> ([u8; 16]) {
+		fn gen_request_id() -> [u8; 16] {
 			// Create randomness
 			let random = T::RequestRandomness::random(&b"unique_id"[..]).0;
 

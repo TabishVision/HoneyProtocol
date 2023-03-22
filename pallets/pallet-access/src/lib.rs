@@ -80,7 +80,7 @@ pub mod pallet {
 
 			MemberRoles::<T>::insert(new_role, user.clone(), true);
 
-			Self::deposit_event(Event::RoleRevoked { user: user.clone(), role: new_role });
+			Self::deposit_event(Event::RoleAssigned { user: user.clone(), role: new_role });
 
 			Ok(())
 		}
@@ -94,7 +94,7 @@ pub mod pallet {
 
 			MemberRoles::<T>::insert(&new_role, &user, false);
 
-			Self::deposit_event(Event::RoleAssigned { user: user.clone(), role: new_role });
+			Self::deposit_event(Event::RoleRevoked { user: user.clone(), role: new_role });
 
 			Ok(())
 		}
