@@ -208,7 +208,7 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		#[pallet::weight(0)]
 		#[pallet::call_index(1)]
-		pub fn register_patient(
+		pub fn register_patient_self(
 			origin: OriginFor<T>,
 			name: Vec<u8>,
 			email: Vec<u8>,
@@ -223,6 +223,24 @@ pub mod pallet {
 
 		#[pallet::weight(0)]
 		#[pallet::call_index(2)]
+		pub fn register_patient(
+			origin: OriginFor<T>,
+			patient_account_id: T::AccountId,
+			name: Vec<u8>,
+			email: Vec<u8>,
+			data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+		) -> DispatchResult {
+			let sender = ensure_signed(origin.clone())?;
+
+			pallet_access::Pallet::<T>::validate(origin, sender.clone(), [0u8;32])?;
+
+			Self::register(patient_account_id, name, email, data_hash)?;
+
+			Ok(())
+		}
+
+		#[pallet::weight(0)]
+		#[pallet::call_index(3)]
 		pub fn request_patient_data(
 			origin: OriginFor<T>,
 			patient_account_id: T::AccountId,
@@ -237,7 +255,7 @@ pub mod pallet {
 		}
 
 		#[pallet::weight(0)]
-		#[pallet::call_index(3)]
+		#[pallet::call_index(4)]
 		pub fn approve_request(origin: OriginFor<T>, requester: T::AccountId) -> DispatchResult {
 			let sender = ensure_signed(origin)?;
 
@@ -247,7 +265,7 @@ pub mod pallet {
 		}
 
 		#[pallet::weight(0)]
-		#[pallet::call_index(4)]
+		#[pallet::call_index(5)]
 		pub fn get_patient_data(
 			origin: OriginFor<T>,
 			patient_account_id: T::AccountId,
@@ -272,7 +290,7 @@ pub mod pallet {
 		}
 
 		#[pallet::weight(0)]
-		#[pallet::call_index(5)]
+		#[pallet::call_index(6)]
 		pub fn update_patient_data(
 			origin: OriginFor<T>,
 			patient_account_id: T::AccountId,
