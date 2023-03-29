@@ -102,7 +102,7 @@ pub mod pallet {
 		fn validate_role(user: T::AccountId, new_role: [u8; 32]) -> Result<(), DispatchError> {
 			ensure!(Roles::<T>::contains_key(&new_role), Error::<T>::InvalidRole);
 
-			ensure!(MemberRoles::<T>::contains_key(&new_role, &user), Error::<T>::AccessDenied);
+			ensure!(MemberRoles::<T>::contains_key(&new_role, &user), Error::<T>::NotAssigned);
 
 			ensure!(MemberRoles::<T>::get(&new_role, &user).unwrap(), Error::<T>::AccessDenied);
 
