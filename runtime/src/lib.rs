@@ -49,6 +49,7 @@ pub use sp_runtime::{Perbill, Permill};
 
 pub use pallet_access;
 pub use pallet_patient;
+pub use pallet_doctor;
 
 
 /// An index to a block.
@@ -285,8 +286,13 @@ impl pallet_patient::Config for Runtime {
 	type RequestRandomness = RandomnessCollectiveFlip;
 	type MaxNameLength = frame_support::pallet_prelude::ConstU32<100>;
 	type MaxEmailLength = frame_support::pallet_prelude::ConstU32<100>;
-	type MaxHashLength = frame_support::pallet_prelude::ConstU32<100>;
 	type MaxRequestList = frame_support::pallet_prelude::ConstU32<100>;
+}
+
+impl pallet_doctor::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type MaxHashLength = frame_support::pallet_prelude::ConstU32<100>;
+	type MaxListLength = frame_support::pallet_prelude::ConstU32<100>;
 }
 
 
@@ -309,6 +315,7 @@ construct_runtime!(
 		// Include the custom logic from the pallet-template in the runtime.
 		AccessModule: pallet_access,
 		PatientModule: pallet_patient,
+		DoctorModule: pallet_doctor,
 	}
 );
 

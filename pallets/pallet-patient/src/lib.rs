@@ -8,6 +8,7 @@ pub mod pallet {
 	use frame_system::pallet_prelude::*;
 
 	pub use pallet_access;
+	pub use pallet_doctor;
 
 	#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
@@ -32,7 +33,7 @@ pub mod pallet {
 	pub struct Pallet<T>(_);
 
 	#[pallet::config]
-	pub trait Config: frame_system::Config + pallet_access::Config {
+	pub trait Config: frame_system::Config + pallet_access::Config + pallet_doctor::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 
 		/// The type of Randomness we want to specify for this pallet.
@@ -42,8 +43,6 @@ pub mod pallet {
 		type MaxNameLength: Get<u32>;
 		#[pallet::constant]
 		type MaxEmailLength: Get<u32>;
-		#[pallet::constant]
-		type MaxHashLength: Get<u32>;
 		#[pallet::constant]
 		type MaxRequestList: Get<u32>;
 	}
@@ -168,6 +167,8 @@ pub mod pallet {
 			);
 
 			RequestMap::<T>::insert(&patient_account_id, &requester, &request_unique_id);
+
+			pallet_doctor::Pallet::<T>::add_request(requester.clone(), patient_account_id.clone())?;
 
 			Self::deposit_event(Event::RequestQueued {
 				requester,

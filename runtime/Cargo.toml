@@ -41,6 +41,8 @@ sp-version = { version = "5.0.0", default-features = false, git = "https://githu
 
 pallet-access = { version = "4.0.0-dev", default-features = false, path = "../pallets/pallet-access" }
 pallet-patient = { version = "4.0.0-dev", default-features = false, path = "../pallets/pallet-patient" }
+pallet-doctor = { version = "4.0.0-dev", default-features = false, path = "../pallets/pallet-doctor" }
+
 
 
 # Used for the node template's RPCs
