@@ -1,6 +1,6 @@
 use node_template_runtime::{
-	AccountId, AuraConfig, BalancesConfig, GenesisConfig, GrandpaConfig, Signature, SudoConfig,
-	SystemConfig, AccessModuleConfig, WASM_BINARY,
+	AccessModuleConfig, AccountId, AuraConfig, BalancesConfig, GenesisConfig, GrandpaConfig,
+	Signature, SudoConfig, SystemConfig, WASM_BINARY,
 };
 use sc_service::ChainType;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -59,7 +59,6 @@ pub fn development_config() -> Result<ChainSpec, String> {
 					get_account_id_from_seed::<sr25519::Public>("Alice//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Bob//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Fund//wallet"),
-
 				],
 				true,
 			)
@@ -108,7 +107,6 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 					get_account_id_from_seed::<sr25519::Public>("Dave//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
 					get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
-	
 				],
 				true,
 			)
@@ -154,12 +152,7 @@ fn testnet_genesis(
 			// Assign network admin rights.
 			key: Some(root_key),
 		},
-		access_module: AccessModuleConfig {
-			roles: vec![ 
-				[0u8;32],
-				[1u8;32],
-			]
-		},
+		access_module: AccessModuleConfig { roles: vec![[0u8; 32], [1u8; 32]] },
 		transaction_payment: Default::default(),
 	}
 }

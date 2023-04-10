@@ -48,9 +48,8 @@ pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
 pub use pallet_access;
-pub use pallet_patient;
 pub use pallet_doctor;
-
+pub use pallet_patient;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -294,7 +293,6 @@ impl pallet_doctor::Config for Runtime {
 	type MaxHashLength = frame_support::pallet_prelude::ConstU32<100>;
 	type MaxListLength = frame_support::pallet_prelude::ConstU32<100>;
 }
-
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(

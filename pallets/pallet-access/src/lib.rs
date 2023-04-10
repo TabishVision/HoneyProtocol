@@ -145,7 +145,7 @@ pub mod pallet {
 
 		#[pallet::weight(0)]
 		#[pallet::call_index(3)]
-		pub fn validate(
+		pub fn has_role(
 			origin: OriginFor<T>,
 			user: T::AccountId,
 			new_role: [u8; 32],
