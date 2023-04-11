@@ -282,10 +282,6 @@ impl pallet_access::Config for Runtime {
 
 impl pallet_patient::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
-	type RequestRandomness = RandomnessCollectiveFlip;
-	type MaxNameLength = frame_support::pallet_prelude::ConstU32<100>;
-	type MaxEmailLength = frame_support::pallet_prelude::ConstU32<100>;
-	type MaxRequestList = frame_support::pallet_prelude::ConstU32<100>;
 }
 
 impl pallet_doctor::Config for Runtime {
