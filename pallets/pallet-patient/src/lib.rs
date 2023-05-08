@@ -15,11 +15,12 @@ pub mod pallet {
 	pub struct Patients<T: Config> {
 		pub personal_data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
 		pub data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+		pub loinc_code: Option<BoundedVec<u8, T::MaxLoincCodeLength>>,
 	}
 
 	impl<T: Config> Default for Patients<T> {
 		fn default() -> Self {
-			Patients { personal_data_hash: None, data_hash: None }
+			Patients { personal_data_hash: None, data_hash: None, loinc_code: None }
 		}
 	}
 
@@ -30,6 +31,9 @@ pub mod pallet {
 	#[pallet::config]
 	pub trait Config: frame_system::Config + pallet_access::Config + pallet_doctor::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+
+		#[pallet::constant]
+		type MaxLoincCodeLength: Get<u32>;
 	}
 
 	#[pallet::storage]
@@ -91,13 +95,14 @@ pub mod pallet {
 			patient_account_id: T::AccountId,
 			personal_data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
 			data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+			loinc_code: Option<BoundedVec<u8, T::MaxLoincCodeLength>>,
 		) -> Result<(), DispatchError> {
 			ensure!(
 				!DataMap::<T>::contains_key(&patient_account_id),
 				Error::<T>::AlreadyRegistered
 			);
 
-			let patient = Patients::<T> { personal_data_hash, data_hash };
+			let patient = Patients::<T> { personal_data_hash, data_hash, loinc_code };
 
 			DataMap::<T>::insert(&patient_account_id, patient);
 
@@ -189,6 +194,7 @@ pub mod pallet {
 			requester: T::AccountId,
 			data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
 			personal_data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+			loinc_code: Option<BoundedVec<u8, T::MaxLoincCodeLength>>,
 		) -> Result<(), DispatchError> {
 			let approved_doctor_ids = AprovedRequestMap::<T>::get(&patient_account_id);
 
@@ -201,6 +207,7 @@ pub mod pallet {
 
 			patient_data.data_hash = data_hash;
 			patient_data.personal_data_hash = personal_data_hash;
+			patient_data.loinc_code = loinc_code;
 
 			DataMap::<T>::insert(&patient_account_id, patient_data);
 
@@ -218,10 +225,11 @@ pub mod pallet {
 			origin: OriginFor<T>,
 			personal_data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
 			data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+			loinc_code: Option<BoundedVec<u8, T::MaxLoincCodeLength>>,
 		) -> DispatchResult {
 			let sender = ensure_signed(origin)?;
 
-			Self::register(sender.clone(), personal_data_hash, data_hash)?;
+			Self::register(sender.clone(), personal_data_hash, data_hash, loinc_code)?;
 
 			Ok(())
 		}
@@ -233,12 +241,13 @@ pub mod pallet {
 			patient_account_id: T::AccountId,
 			personal_data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
 			data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+			loinc_code: Option<BoundedVec<u8, T::MaxLoincCodeLength>>,
 		) -> DispatchResult {
 			let sender = ensure_signed(origin.clone())?;
 
 			pallet_access::Pallet::<T>::has_role(origin, sender.clone(), [0u8; 32])?;
 
-			Self::register(patient_account_id, personal_data_hash, data_hash)?;
+			Self::register(patient_account_id, personal_data_hash, data_hash, loinc_code)?;
 
 			Ok(())
 		}
@@ -275,12 +284,13 @@ pub mod pallet {
 			patient_account_id: T::AccountId,
 			data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
 			personal_data_hash: Option<BoundedVec<u8, T::MaxHashLength>>,
+			loinc_code: Option<BoundedVec<u8, T::MaxLoincCodeLength>>,
 		) -> DispatchResult {
 			let requester = ensure_signed(origin.clone())?;
 
 			pallet_access::Pallet::<T>::has_role(origin, requester.clone(), [0u8; 32])?;
 
-			Self::update(patient_account_id, requester, data_hash, personal_data_hash)?;
+			Self::update(patient_account_id, requester, data_hash, personal_data_hash, loinc_code)?;
 
 			Ok(())
 		}
